@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"; // 🔥 ĐÃ THÊM: TextInput
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"; // ĐÃ SỬA: TextInput VẪN ĐƯỢC IMPORT
 
 // --- DỮ LIỆU GIẢ ĐỊNH ---
 interface Resource {
@@ -114,7 +114,7 @@ export default function AdminResourcesScreen() {
 
             {/* CONTROL BAR: Tìm kiếm và Tải lên */}
             <View style={styles.controls}>
-                {/* 🔥 INPUT ĐÃ ĐƯỢC THÊM */}
+                {/* INPUT ĐÃ ĐƯỢC THÊM */}
                 <TextInput 
                     style={styles.searchInput} 
                     placeholder="Tìm kiếm tài liệu theo tên..."

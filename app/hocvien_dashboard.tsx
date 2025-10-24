@@ -1,32 +1,88 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack, useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-// Dữ liệu module cho Học viên (7 chức năng + 1 Quản lý TK)
-const studentModules = [
-    { name: "Lịch Học & Điểm", icon: "calendar-check", route: "/student/schedule", color: "#007bff" },
-    { name: "Bài tập & Thi", icon: "pencil-ruler", route: "/student/assignments", color: "#ff7043" },
-    { name: "Thông tin Cá nhân", icon: "account-edit", route: "/student/profile", color: "#28a745" }, // Tương đương Quản lý Tài khoản
-    { name: "Khóa học Đăng ký", icon: "book-plus", route: "/student/register", color: "#6f42c1" },
-    { name: "Tra cứu Điểm", icon: "google-spreadsheet", route: "/student/grades", color: "#dc3545" },
-    { name: "Chứng chỉ Đạt được", icon: "certificate", route: "/student/certificates", color: "#17a2b8" },
-    { name: "Đánh giá Khóa học", icon: "star-circle", route: "/student/feedback", color: "#f06292" },
+// Lấy chiều rộng màn hình để tính toán kích thước module
+const screenWidth = Dimensions.get('window').width;
+
+// --- INTERFACES (ĐỊNH NGHĨA KIỂU DỮ LIỆU BỊ THIẾU) ---
+interface OngoingClass {
+    id: string;
+    name: string;
+    teacher: string;
+    progress: number;
+    color: string;
+}
+
+interface ClassProgressCardProps {
+    item: OngoingClass;
+    onPress: (id: string) => void;
+}
+// -----------------------------------------------------
+
+// --- DỮ LIỆU GIẢ ĐỊNH ---
+const STUDENT_NAME = "Trần Duy Hà";
+const ACCENT_COLOR = '#007bff'; 
+
+const STUDENT_STATS = [
+    { label: "Tổng Điểm TBC", value: 7.8, color: ACCENT_COLOR, icon: 'medal-outline' },
+    { label: "Bài tập Hoàn thành", value: '85%', color: '#28a745', icon: 'check-circle-outline' },
+    { label: "Bài tập Quá hạn", value: 2, color: '#dc3545', icon: 'alert-octagon-outline' },
 ];
+
+const ONGOING_CLASSES: OngoingClass[] = [
+    { id: 'C001', name: 'IELTS Writing 7.0', teacher: 'Cô Tú Sương', progress: 85, color: '#007bff' },
+    { id: 'C002', name: 'Ngữ Pháp Chuyên sâu', teacher: 'Thầy Lê Tùng', progress: 50, color: '#28a745' },
+];
+
+const STUDENT_MODULES = [
+    { name: "Lịch Học & Điểm", icon: "calendar-month-outline", route: "schedule", color: "#28a745" }, 
+    { name: "Bài tập & Thi", icon: "pencil-ruler", route: "assignments", color: "#ff7043" },
+    { name: "Tra cứu Điểm", icon: "google-spreadsheet", route: "grades", color: "#dc3545" },
+    { name: "Thông tin Cá nhân", icon: "account-edit", route: "profile", color: "#6f42c1" }, 
+    { name: "Kho tài liệu", icon: "folder-open-outline", route: "resources", color: "#007bff" },
+    { name: "Chứng chỉ Đạt được", icon: "certificate", route: "certificates", color: "#17a2b8" },
+];
+
+
+// --- COMPONENT PHỤ: Thẻ Lớp đang học (ĐÃ FIX LỖI TS) ---
+const ClassProgressCard: React.FC<ClassProgressCardProps> = ({ item, onPress }) => (
+    <TouchableOpacity style={styles.classProgressCard} onPress={() => onPress(item.id)}>
+        <View style={styles.classIconContainer}>
+            <MaterialCommunityIcons name="book-open-outline" size={24} color={item.color} />
+        </View>
+        <View style={styles.classProgressInfo}>
+            <Text style={styles.classProgressName} numberOfLines={1}>{item.name}</Text>
+            <Text style={styles.classProgressTeacher}>GV: {item.teacher}</Text>
+        </View>
+        <View style={styles.progressBarWrapper}>
+            <Text style={styles.progressPercent}>{item.progress}%</Text>
+            {/* Thanh tiến trình giả lập */}
+            <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: `${item.progress}%`, backgroundColor: item.color }]} />
+            </View>
+        </View>
+    </TouchableOpacity>
+);
+// ---------------------------------------------
+
 
 export default function HocVienDashboardScreen() {
     const router = useRouter();
     const mainColor = '#fdd835'; // Màu Vàng của Học viên
-    const mainColorDark = '#fdd835'; // Màu đậm cho chữ
-
+    const mainColorDark = '#333'; // Màu đậm cho chữ
+    const studentName = "Trần Duy Hà"; // Tên học viên
+    const greetingText = "Xin chào, Học viên"; // Lời chào
+    
+    // 🔥 SỬ DỤNG HÀM ĐIỀU HƯỚNG ĐÃ SỬA
     const handleNavigate = (route: string) => {
-        router.push(route);
+        router.push(`/hocvien/${route}`);
     };
     
     // HÀM XỬ LÝ ĐĂNG XUẤT
     const handleLogout = () => {
         alert("Đã đăng xuất tài khoản!");
-        // Chuyển hướng về trang đăng nhập Học viên
         router.replace('/hocvien_login'); 
     };
 
@@ -36,7 +92,8 @@ export default function HocVienDashboardScreen() {
 
             {/* HEADER CHÀO MỪNG */}
             <View style={styles.header}>
-                <Text style={styles.greeting}>Chào mừng, Học viên A!</Text>
+                <Text style={styles.greeting}>{greetingText}</Text>
+                <Text style={styles.studentName}>{studentName}!</Text>
                 <Text style={styles.subtitle}>Bảng tổng hợp học tập của bạn.</Text>
             </View>
 
@@ -58,7 +115,7 @@ export default function HocVienDashboardScreen() {
             {/* PHẦN 2: ACTION MODULES (CÁC CHỨC NĂNG CHÍNH) */}
             <Text style={styles.sectionTitle}>Các chức năng Học tập</Text>
             <View style={styles.modulesGrid}>
-                {studentModules.map((module) => (
+                {STUDENT_MODULES.map((module) => (
                     <TouchableOpacity 
                         key={module.name} 
                         style={[styles.moduleCard, { backgroundColor: module.color }]}
@@ -98,9 +155,16 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ddd',
     },
     greeting: {
-        fontSize: 24,
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#666', 
+    },
+    studentName: {
+        fontSize: 28,
         fontWeight: '900',
-        color: '#fdd835', 
+        color: ACCENT_COLOR,
+        marginTop: 2,
+        marginBottom: 5,
     },
     subtitle: {
         fontSize: 16,
@@ -146,9 +210,9 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     moduleCard: {
-        width: '47%', 
+        width: screenWidth / 2 - 25, 
         height: 120,
-        borderRadius: 12,
+        borderRadius: 15,
         marginBottom: 15,
         justifyContent: 'space-around',
         alignItems: 'flex-start',
@@ -163,6 +227,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         marginTop: 5,
+        color: 'white',
     },
     // STYLES CHO NÚT ĐĂNG XUẤT
     logoutButton: {
@@ -180,5 +245,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         marginLeft: 10,
-    }
+    },
+
+    // --- STYLES PHỤ CỦA CLASS CARD ---
+    classProgressCard: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#f7f7f7' },
+    classIconContainer: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#f0f3f5', justifyContent: 'center', alignItems: 'center', marginRight: 15 },
+    classProgressInfo: { flex: 1 },
+    classProgressName: { fontSize: 16, fontWeight: '600', color: '#333' },
+    classProgressTeacher: { fontSize: 12, color: '#999', marginTop: 3 },
+    progressBarWrapper: { width: 100, alignItems: 'flex-end' },
+    progressPercent: { fontSize: 12, fontWeight: 'bold', color: '#333', marginBottom: 5 },
+    progressBarBackground: { width: '100%', height: 6, backgroundColor: '#eee', borderRadius: 3, overflow: 'hidden' },
+    progressBarFill: { height: '100%', borderRadius: 3 },
 });

@@ -32,7 +32,7 @@ export default function AdminLoginScreen() {
     setErrorMessage("");
 
     // Kiểm tra tài khoản
-    if (email === "admin123" && password === "01203455") {
+    if (email === "" && password === "") {
       router.replace("/admin_dashboard");
     } else {
       setErrorMessage("Tài khoản hoặc mật khẩu không chính xác!");

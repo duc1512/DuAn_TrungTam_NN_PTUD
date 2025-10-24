@@ -19,7 +19,7 @@ export default function HocVienLoginScreen() {
 
   const handleLogin = () => {
     // Kiểm tra tài khoản
-    if (email === "hocvien123" && password === "123456") {
+    if (email === "" && password === "") {
       setError(''); // xóa lỗi cũ
       router.replace('/hocvien_dashboard');
     } else {

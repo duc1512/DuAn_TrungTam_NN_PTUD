@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // 🔥 ĐÃ THÊM MaterialCommunityIcons
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -11,7 +11,7 @@ interface ClassScheduleItem {
     time: string;
     classId: string;
     className: string;
-    status: 'Đã hoàn thành' | 'Sắp tới' | 'Đang diễn ra'; // Vẫn giữ trong dữ liệu để logic khác có thể dùng
+    status: 'Đã hoàn thành' | 'Sắp tới' | 'Đang diễn ra'; 
     color: string;
     courseName: string;
 }
@@ -106,7 +106,7 @@ const AgendaItemCard: React.FC<{ item: ClassScheduleItem, onPress: (classId: str
                 <Text style={styles.agendaCourseText}>{item.courseName}</Text>
             </View>
 
-            {/* 🔥 KHỐI HIỂN THỊ STATUS ĐÃ ĐƯỢC ĐƠN GIẢN HÓA, CHỈ CÒN MŨI TÊN CHUYỂN TIẾP */}
+            {/* KHỐI CHỈ CÒN MŨI TÊN CHUYỂN TIẾP */}
             <View style={styles.forwardIconContainer}>
                 <Ionicons name="chevron-forward-outline" size={20} color="#ccc" />
             </View>
@@ -121,7 +121,8 @@ export default function FullScheduleScreen() {
     const [selectedDate, setSelectedDate] = useState(MOCK_DATES[0].dateString);
 
     const handleClassPress = (classId: string) => {
-        router.push(`/giangvien/class_details?id=${classId}`); 
+        // Đường dẫn đã được sửa thành schedule_details
+        router.push(`/giangvien/schedule_details?id=${classId}`); 
     };
 
     const currentDailyData = FULL_SCHEDULE_DATA.find(daily => 
@@ -281,7 +282,7 @@ const styles = StyleSheet.create({
         marginTop: 3 
     },
     
-    // 🔥 KHỐI CHỈ CÒN MŨI TÊN (Thay thế agendaStatusContainer)
+    // KHỐI CHỈ CÒN MŨI TÊN (Thay thế agendaStatusContainer)
     forwardIconContainer: { 
         flexDirection: 'row', 
         alignItems: 'center',
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: '#007bff', 
+        backgroundColor: '#007bff', // Màu xanh dương cho hành động thêm
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 6,

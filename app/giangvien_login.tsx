@@ -21,7 +21,7 @@ export default function GiangVienLoginScreen() {
   const handleLogin = () => {
     setErrorMessage("");
 
-    if (email === "giangvien123" && password === "123456") {
+    if (email === "" && password === "") {
       router.replace("/giangvien_dashboard");
     } else {
       setErrorMessage("Tài khoản hoặc mật khẩu không chính xác!");
